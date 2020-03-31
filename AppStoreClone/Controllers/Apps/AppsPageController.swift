@@ -49,39 +49,18 @@ class AppsPageController: BaseListController, UICollectionViewDelegateFlowLayout
         APIService.shared.fetchNewGames { (appGroup, err) in
             dispatchGroup.leave()
             group1 = appGroup
-//            if let group = appGroup {
-//                self.groups.append(group)
-//            }
-//
-//            DispatchQueue.main.async {
-//                self.collectionView.reloadData()
-//            }
         }
         
         dispatchGroup.enter()
         APIService.shared.fetchFreeGames { (appGroup, err) in
             dispatchGroup.leave()
             group2 = appGroup
-//            if let group = appGroup {
-//                self.groups.append(group)
-//            }
-//
-//            DispatchQueue.main.async {
-//                self.collectionView.reloadData()
-//            }
         }
         
         dispatchGroup.enter()
         APIService.shared.fetchTopGrossing { (appGroup, err) in
             dispatchGroup.leave()
             group3 = appGroup
-//            if let group = appGroup {
-//                self.groups.append(group)
-//            }
-//
-//            DispatchQueue.main.async {
-//                self.collectionView.reloadData()
-//            }
         }
         
         dispatchGroup.enter()
