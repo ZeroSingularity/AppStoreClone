@@ -13,6 +13,7 @@ class AppsHorizontalController: HorizontalSnappingController, UICollectionViewDe
     fileprivate let topBottomPadding: CGFloat = 12
     fileprivate let lineSpacing: CGFloat = 10
     var appGroup: AppGroup?
+    var didSelectHandler: ((FeedResult) -> ())?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,5 +45,12 @@ class AppsHorizontalController: HorizontalSnappingController, UICollectionViewDe
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return lineSpacing
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let app = appGroup?.feed.results[indexPath.item] {
+            print(app.name)
+            didSelectHandler?(app)
+        }
     }
 }
