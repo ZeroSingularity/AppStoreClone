@@ -25,6 +25,9 @@
 		C54BE83E24325D0F00345019 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54BE83D24325D0F00345019 /* AppGroup.swift */; };
 		C54BE8402432E73A00345019 /* SocialApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54BE83F2432E73A00345019 /* SocialApp.swift */; };
 		C54BE8422433DA8900345019 /* HorizontalSnappingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54BE8412433DA8900345019 /* HorizontalSnappingController.swift */; };
+		C558FCE3243BAA8E008ECC76 /* PreviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C558FCE2243BAA8E008ECC76 /* PreviewCell.swift */; };
+		C558FCE5243BAD85008ECC76 /* PreviewScreenshotsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C558FCE4243BAD85008ECC76 /* PreviewScreenshotsController.swift */; };
+		C558FCE7243BB033008ECC76 /* ScreenshotCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C558FCE6243BB033008ECC76 /* ScreenshotCell.swift */; };
 		C564D977242D160B0008A101 /* AppsPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C564D976242D160B0008A101 /* AppsPageController.swift */; };
 		C564D979242D18560008A101 /* BaseLIstController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C564D978242D18560008A101 /* BaseLIstController.swift */; };
 		C5B677D8242A8A9E0069E1D2 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B677D7242A8A9E0069E1D2 /* UIStackView.swift */; };
@@ -88,6 +91,9 @@
 		C54BE83D24325D0F00345019 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		C54BE83F2432E73A00345019 /* SocialApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialApp.swift; sourceTree = "<group>"; };
 		C54BE8412433DA8900345019 /* HorizontalSnappingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalSnappingController.swift; sourceTree = "<group>"; };
+		C558FCE2243BAA8E008ECC76 /* PreviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewCell.swift; sourceTree = "<group>"; };
+		C558FCE4243BAD85008ECC76 /* PreviewScreenshotsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewScreenshotsController.swift; sourceTree = "<group>"; };
+		C558FCE6243BB033008ECC76 /* ScreenshotCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotCell.swift; sourceTree = "<group>"; };
 		C564D976242D160B0008A101 /* AppsPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsPageController.swift; sourceTree = "<group>"; };
 		C564D978242D18560008A101 /* BaseLIstController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLIstController.swift; sourceTree = "<group>"; };
 		C5B677D7242A8A9E0069E1D2 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
@@ -258,6 +264,7 @@
 			isa = PBXGroup;
 			children = (
 				C515D186243508B20003EF27 /* AppDetailController.swift */,
+				C558FCE4243BAD85008ECC76 /* PreviewScreenshotsController.swift */,
 			);
 			path = Details;
 			sourceTree = "<group>";
@@ -266,6 +273,8 @@
 			isa = PBXGroup;
 			children = (
 				C515D1892435115B0003EF27 /* AppDetailCell.swift */,
+				C558FCE2243BAA8E008ECC76 /* PreviewCell.swift */,
+				C558FCE6243BB033008ECC76 /* ScreenshotCell.swift */,
 			);
 			path = Details;
 			sourceTree = "<group>";
@@ -570,12 +579,15 @@
 				C54BE8422433DA8900345019 /* HorizontalSnappingController.swift in Sources */,
 				C515D18A2435115B0003EF27 /* AppDetailCell.swift in Sources */,
 				C5B677D8242A8A9E0069E1D2 /* UIStackView.swift in Sources */,
+				C558FCE5243BAD85008ECC76 /* PreviewScreenshotsController.swift in Sources */,
 				C5E04C67242D1D020064DCCB /* AppsGroupCell.swift in Sources */,
 				C5E04C71242D743B0064DCCB /* AppsHeaderHorizontalController.swift in Sources */,
 				C5E04C6F242D6F880064DCCB /* AppsPageHeader.swift in Sources */,
 				C564D979242D18560008A101 /* BaseLIstController.swift in Sources */,
+				C558FCE3243BAA8E008ECC76 /* PreviewCell.swift in Sources */,
 				C51044D7242909A60076493E /* AppsSearchController.swift in Sources */,
 				C5B677DE242AAA910069E1D2 /* APIService.swift in Sources */,
+				C558FCE7243BB033008ECC76 /* ScreenshotCell.swift in Sources */,
 				C54BE83E24325D0F00345019 /* AppGroup.swift in Sources */,
 				C515D187243508B20003EF27 /* AppDetailController.swift in Sources */,
 				C5E04C73242D76200064DCCB /* AppsHeaderCell.swift in Sources */,
