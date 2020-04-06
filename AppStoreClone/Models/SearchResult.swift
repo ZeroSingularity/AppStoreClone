@@ -18,5 +18,8 @@ struct Result: Decodable {
         primaryGenreName: String,
         averageUserRating: Float?,
         screenshotUrls: [String],
-        artworkUrl100: String
+        artworkUrl100: String,
+        formattedPrice: String,
+        description: String,
+        releaseNotes: String
 }
