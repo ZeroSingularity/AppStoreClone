@@ -31,6 +31,7 @@
 		C558FCE9243BE35B008ECC76 /* ReviewRowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C558FCE8243BE35B008ECC76 /* ReviewRowCell.swift */; };
 		C558FCEB243BE5EE008ECC76 /* ReviewsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C558FCEA243BE5EE008ECC76 /* ReviewsController.swift */; };
 		C558FCED243BE98A008ECC76 /* ReviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C558FCEC243BE98A008ECC76 /* ReviewCell.swift */; };
+		C558FCEF243D102C008ECC76 /* Reviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C558FCEE243D102C008ECC76 /* Reviews.swift */; };
 		C564D977242D160B0008A101 /* AppsPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C564D976242D160B0008A101 /* AppsPageController.swift */; };
 		C564D979242D18560008A101 /* BaseLIstController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C564D978242D18560008A101 /* BaseLIstController.swift */; };
 		C5B677D8242A8A9E0069E1D2 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B677D7242A8A9E0069E1D2 /* UIStackView.swift */; };
@@ -100,6 +101,7 @@
 		C558FCE8243BE35B008ECC76 /* ReviewRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRowCell.swift; sourceTree = "<group>"; };
 		C558FCEA243BE5EE008ECC76 /* ReviewsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsController.swift; sourceTree = "<group>"; };
 		C558FCEC243BE98A008ECC76 /* ReviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewCell.swift; sourceTree = "<group>"; };
+		C558FCEE243D102C008ECC76 /* Reviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reviews.swift; sourceTree = "<group>"; };
 		C564D976242D160B0008A101 /* AppsPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsPageController.swift; sourceTree = "<group>"; };
 		C564D978242D18560008A101 /* BaseLIstController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLIstController.swift; sourceTree = "<group>"; };
 		C5B677D7242A8A9E0069E1D2 /* UIStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
@@ -313,6 +315,7 @@
 				C5B677DA242AA0C30069E1D2 /* SearchResult.swift */,
 				C54BE83D24325D0F00345019 /* AppGroup.swift */,
 				C54BE83F2432E73A00345019 /* SocialApp.swift */,
+				C558FCEE243D102C008ECC76 /* Reviews.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -599,6 +602,7 @@
 				C51044D7242909A60076493E /* AppsSearchController.swift in Sources */,
 				C5B677DE242AAA910069E1D2 /* APIService.swift in Sources */,
 				C558FCE7243BB033008ECC76 /* ScreenshotCell.swift in Sources */,
+				C558FCEF243D102C008ECC76 /* Reviews.swift in Sources */,
 				C54BE83E24325D0F00345019 /* AppGroup.swift in Sources */,
 				C515D187243508B20003EF27 /* AppDetailController.swift in Sources */,
 				C5E04C73242D76200064DCCB /* AppsHeaderCell.swift in Sources */,
