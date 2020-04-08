@@ -14,12 +14,13 @@ struct SearchResult: Decodable {
 }
 
 struct Result: Decodable {
-    let trackName: String,
+    let trackId: Int,
+        trackName: String,
         primaryGenreName: String,
         averageUserRating: Float?,
         screenshotUrls: [String],
         artworkUrl100: String,
-        formattedPrice: String,
+        formattedPrice: String?,
         description: String,
-        releaseNotes: String
+        releaseNotes: String?
 }
