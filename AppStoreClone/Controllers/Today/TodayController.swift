@@ -10,6 +10,7 @@ import UIKit
 
 class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     fileprivate let cellId = "cellId"
+    var startingFrame: CGRect?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +45,31 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Animate fullscreen somehow")
+        let grayView = UIView()
+        grayView.backgroundColor = .gray
+        grayView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRemoveGrayView)))
+        view.addSubview(grayView)
+        grayView.frame = .init(x: 0, y: 0, width: 100, height: 200)
+        grayView.layer.cornerRadius = 16
+        
+        guard let cell = collectionView.cellForItem(at: indexPath) else { return }
+        
+        // absolute coordinates of cell
+        guard let startingFrame = cell.superview?.convert(cell.frame, to: nil) else { return }
+        self.startingFrame = startingFrame
+        grayView.frame = startingFrame
+        
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
+            grayView.frame = self.view.frame
+        }, completion: nil)
+    }
+    
+    @objc func handleRemoveGrayView(gesture: UITapGestureRecognizer) {
+        // access starting frame
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
+            gesture.view?.frame = self.startingFrame ?? .zero
+        }, completion: { _ in
+            gesture.view?.removeFromSuperview()
+        })
     }
 }
