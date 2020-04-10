@@ -11,6 +11,7 @@ import UIKit
 class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     fileprivate let cellId = "cellId"
     var startingFrame: CGRect?
+    var appFullscreenController: UIViewController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +34,7 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        return .init(width: view.frame.width - 64, height: 400)
+        return .init(width: view.frame.width - 64, height: 450)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -45,22 +46,28 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let grayView = UIView()
-        grayView.backgroundColor = .gray
-        grayView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRemoveGrayView)))
-        view.addSubview(grayView)
-        grayView.frame = .init(x: 0, y: 0, width: 100, height: 200)
-        grayView.layer.cornerRadius = 16
+        let appFullscreenController = AppFullscreenController()
+        let controllerView = appFullscreenController.view!
+        controllerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRemoveGrayView)))
+        view.addSubview(controllerView)
+        addChild(appFullscreenController)
+        self.appFullscreenController = appFullscreenController
+        
+        controllerView.frame = .init(x: 0, y: 0, width: 100, height: 200)
+        controllerView.layer.cornerRadius = 16
         
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
         
         // absolute coordinates of cell
         guard let startingFrame = cell.superview?.convert(cell.frame, to: nil) else { return }
         self.startingFrame = startingFrame
-        grayView.frame = startingFrame
+        controllerView.frame = startingFrame
         
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
-            grayView.frame = self.view.frame
+            controllerView.frame = self.view.frame
+//            self.tabBarController?.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)
+            self.tabBarController?.tabBar.frame.origin.y = self.view.frame.size.height
+            
         }, completion: nil)
     }
     
@@ -68,8 +75,13 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         // access starting frame
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             gesture.view?.frame = self.startingFrame ?? .zero
+//            self.tabBarController?.tabBar.transform = .identity
+            if let tabBarFrame = self.tabBarController?.tabBar.frame {
+                self.tabBarController?.tabBar.frame.origin.y = self.view.frame.size.height - tabBarFrame.height
+            }
         }, completion: { _ in
             gesture.view?.removeFromSuperview()
+            self.appFullscreenController.removeFromParent()
         })
     }
 }

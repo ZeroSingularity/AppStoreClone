@@ -61,4 +61,9 @@ class APIService {
             
         }.resume()
     }
+    
+    struct Reviews: Decodable {
+        let artist: String,
+            review: Int
+    }
 }
