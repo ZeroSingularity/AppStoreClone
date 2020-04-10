@@ -11,7 +11,11 @@ import UIKit
 class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     fileprivate let cellId = "cellId"
     var startingFrame: CGRect?
-    var appFullscreenController: UIViewController!
+    var appFullscreenController: AppFullscreenController!
+    var topConstraint: NSLayoutConstraint!
+    var leadingConstraint: NSLayoutConstraint!
+    var widthConstraint: NSLayoutConstraint!
+    var heightConstraint: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,40 +51,62 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let appFullscreenController = AppFullscreenController()
-        let controllerView = appFullscreenController.view!
-        controllerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRemoveGrayView)))
-        view.addSubview(controllerView)
+        appFullscreenController.dismissHandler = {
+            self.handleRemoveGrayView()
+        }
+        let fullscreenView = appFullscreenController.view!
+        view.addSubview(fullscreenView)
         addChild(appFullscreenController)
         self.appFullscreenController = appFullscreenController
         
-        controllerView.frame = .init(x: 0, y: 0, width: 100, height: 200)
-        controllerView.layer.cornerRadius = 16
+        fullscreenView.frame = .init(x: 0, y: 0, width: 100, height: 200)
+        fullscreenView.layer.cornerRadius = 16
         
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
         
         // absolute coordinates of cell
         guard let startingFrame = cell.superview?.convert(cell.frame, to: nil) else { return }
         self.startingFrame = startingFrame
-        controllerView.frame = startingFrame
+        
+        fullscreenView.translatesAutoresizingMaskIntoConstraints = false
+        topConstraint = fullscreenView.topAnchor.constraint(equalTo: view.topAnchor, constant: startingFrame.origin.y)
+        leadingConstraint = fullscreenView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: startingFrame.origin.x)
+        widthConstraint = fullscreenView.widthAnchor.constraint(equalToConstant: startingFrame.width)
+        heightConstraint = fullscreenView.heightAnchor.constraint(equalToConstant: startingFrame.height)
+        
+        NSLayoutConstraint.activate([ topConstraint, leadingConstraint, widthConstraint, heightConstraint ])
+        self.view.layoutIfNeeded() // needs to be called before animation
         
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
-            controllerView.frame = self.view.frame
-//            self.tabBarController?.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)
-            self.tabBarController?.tabBar.frame.origin.y = self.view.frame.size.height
-            
+            self.topConstraint.constant = 0
+            self.leadingConstraint.constant = 0
+            self.widthConstraint.constant = self.view.frame.width
+            self.heightConstraint.constant = self.view.frame.height
+
+            self.view.layoutIfNeeded() // starts animation
         }, completion: nil)
     }
     
-    @objc func handleRemoveGrayView(gesture: UITapGestureRecognizer) {
+    @objc func handleRemoveGrayView() {
         // access starting frame
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
-            gesture.view?.frame = self.startingFrame ?? .zero
-//            self.tabBarController?.tabBar.transform = .identity
+            
+            self.appFullscreenController.tableView.scrollToRow(at: [0, 0], at: .top, animated: true)
+            
+            guard let startingFrame = self.startingFrame else { return }
+            
+            self.topConstraint.constant = startingFrame.origin.y
+            self.leadingConstraint.constant = startingFrame.origin.x
+            self.widthConstraint.constant = startingFrame.width
+            self.heightConstraint.constant = startingFrame.height
+            
             if let tabBarFrame = self.tabBarController?.tabBar.frame {
                 self.tabBarController?.tabBar.frame.origin.y = self.view.frame.size.height - tabBarFrame.height
             }
+            
+            self.view.layoutIfNeeded()
         }, completion: { _ in
-            gesture.view?.removeFromSuperview()
+            self.appFullscreenController.view?.removeFromSuperview()
             self.appFullscreenController.removeFromParent()
         })
     }
