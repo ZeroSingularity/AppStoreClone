@@ -13,5 +13,10 @@ struct TodayItem {
         title: String,
         image: UIImage,
         description: String,
-        backgroundColor: UIColor
+        backgroundColor: UIColor,
+        cellType: CellType
+    enum CellType: String {
+        case single
+        case multiple
+    }
 }

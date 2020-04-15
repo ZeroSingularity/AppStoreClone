@@ -8,8 +8,8 @@
 
 import UIKit
 
-class TodayCell: UICollectionViewCell {
-    var todayItem: TodayItem! {
+class TodayCell: BaseTodayCell {
+    override var todayItem: TodayItem! {
         didSet {
             categoryLabel.text = todayItem.category
             titleLabel.text = todayItem.title
