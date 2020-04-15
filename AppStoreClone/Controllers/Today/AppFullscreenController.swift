@@ -10,6 +10,7 @@ import UIKit
 
 class AppFullscreenController: UITableViewController {
     var dismissHandler: (() -> ())?
+    var todayItem: TodayItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,10 +32,11 @@ class AppFullscreenController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.item == 0 {
-            let header = AppFullscreenHeaderCell()
-            header.closeButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
+            let headeCell = AppFullscreenHeaderCell()
+            headeCell.closeButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
+            headeCell.todayCell.todayItem = todayItem
             
-            return header
+            return headeCell
         }
         
         let cell = AppFullscreenDescriptionCell()

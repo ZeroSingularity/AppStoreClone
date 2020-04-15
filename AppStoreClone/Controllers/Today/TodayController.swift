@@ -17,6 +17,13 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     var widthConstraint: NSLayoutConstraint!
     var heightConstraint: NSLayoutConstraint!
     
+    let items = [
+        
+        TodayItem.init(category: "LIFE HACK", title: "Utilizing your Time", image: #imageLiteral(resourceName: "garden"), description: "All the tools and apps you need to intelligently organize your life the right way.", backgroundColor: .white),
+        TodayItem.init(category: "HOLIDAYS", title: "Travel on a Budget", image: #imageLiteral(resourceName: "holiday"), description: "Find out all you need to know on how to travel without packing everything!", backgroundColor: #colorLiteral(red: 0.9838578105, green: 0.9588007331, blue: 0.7274674177, alpha: 1)),
+
+    ]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -27,11 +34,12 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return items.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! TodayCell
+        cell.todayItem = items[indexPath.item]
         
         return cell
     }
@@ -51,9 +59,11 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let appFullscreenController = AppFullscreenController()
+        appFullscreenController.todayItem = items[indexPath.row]
         appFullscreenController.dismissHandler = {
             self.handleRemoveGrayView()
         }
+        
         let fullscreenView = appFullscreenController.view!
         view.addSubview(fullscreenView)
         addChild(appFullscreenController)
@@ -82,7 +92,7 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
             self.leadingConstraint.constant = 0
             self.widthConstraint.constant = self.view.frame.width
             self.heightConstraint.constant = self.view.frame.height
-
+            self.tabBarController?.tabBar.frame.origin.y = self.view.frame.size.height
             self.view.layoutIfNeeded() // starts animation
         }, completion: nil)
     }
@@ -100,11 +110,11 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
             self.widthConstraint.constant = startingFrame.width
             self.heightConstraint.constant = startingFrame.height
             
+            self.view.layoutIfNeeded()
+            
             if let tabBarFrame = self.tabBarController?.tabBar.frame {
                 self.tabBarController?.tabBar.frame.origin.y = self.view.frame.size.height - tabBarFrame.height
             }
-            
-            self.view.layoutIfNeeded()
         }, completion: { _ in
             self.appFullscreenController.view?.removeFromSuperview()
             self.appFullscreenController.removeFromParent()
