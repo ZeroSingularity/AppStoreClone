@@ -61,13 +61,14 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         let appFullscreenController = AppFullscreenController()
         appFullscreenController.todayItem = items[indexPath.row]
         appFullscreenController.dismissHandler = {
-            self.handleRemoveGrayView()
+            self.handleRemoveFullscreenView()
         }
         
         let fullscreenView = appFullscreenController.view!
         view.addSubview(fullscreenView)
         addChild(appFullscreenController)
         self.appFullscreenController = appFullscreenController
+        self.collectionView.isUserInteractionEnabled = false
         
         fullscreenView.frame = .init(x: 0, y: 0, width: 100, height: 200)
         fullscreenView.layer.cornerRadius = 16
@@ -94,10 +95,14 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
             self.heightConstraint.constant = self.view.frame.height
             self.tabBarController?.tabBar.frame.origin.y = self.view.frame.size.height
             self.view.layoutIfNeeded() // starts animation
+            
+            guard let cell = self.appFullscreenController.tableView.cellForRow(at: [0, 0]) as? AppFullscreenHeaderCell else { return }
+            cell.todayCell.topConstraint.constant = 48
+            cell.layoutIfNeeded()
         }, completion: nil)
     }
     
-    @objc func handleRemoveGrayView() {
+    @objc func handleRemoveFullscreenView() {
         // access starting frame
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             
@@ -115,9 +120,14 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
             if let tabBarFrame = self.tabBarController?.tabBar.frame {
                 self.tabBarController?.tabBar.frame.origin.y = self.view.frame.size.height - tabBarFrame.height
             }
+            
+            guard let cell = self.appFullscreenController.tableView.cellForRow(at: [0, 0]) as? AppFullscreenHeaderCell else { return }
+            cell.todayCell.topConstraint.constant = 24
+            cell.layoutIfNeeded()
         }, completion: { _ in
             self.appFullscreenController.view?.removeFromSuperview()
             self.appFullscreenController.removeFromParent()
+            self.collectionView.isUserInteractionEnabled = true
         })
     }
 }
