@@ -14,7 +14,8 @@ struct TodayItem {
         image: UIImage,
         description: String,
         backgroundColor: UIColor,
-        cellType: CellType
+        cellType: CellType,
+        apps: [FeedResult]
     enum CellType: String {
         case single
         case multiple
