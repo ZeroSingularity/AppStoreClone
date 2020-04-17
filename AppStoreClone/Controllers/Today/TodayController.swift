@@ -73,7 +73,8 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
             self.items = [
                 TodayItem.init(category: "THE DAILY LIST", title: topGrossingAppGroup?.feed.title ?? "", image: #imageLiteral(resourceName: "garden"), description: "", backgroundColor: .white, cellType: .multiple, apps: topGrossingAppGroup?.feed.results ?? []),
                 TodayItem.init(category: "THE DAILY LIST", title: newGamesAppGroup?.feed.title ?? "", image: #imageLiteral(resourceName: "garden"), description: "", backgroundColor: .white, cellType: .multiple, apps: newGamesAppGroup?.feed.results ?? []),
-                TodayItem.init(category: "LIFE HACK", title: "Utilizing your Time", image: #imageLiteral(resourceName: "garden"), description: "All the tools and apps you need to intelligently organize your life the right way.", backgroundColor: .white, cellType: .single, apps: [])
+                TodayItem.init(category: "LIFE HACK", title: "Utilizing your Time", image: #imageLiteral(resourceName: "garden"), description: "All the tools and apps you need to intelligently organize your life the right way.", backgroundColor: .white, cellType: .single, apps: []),
+                TodayItem.init(category: "HOLIDAYS", title: "Travel on a Budget", image: #imageLiteral(resourceName: "holiday"), description: "Find out all you need to know on how to travel without packing everything!", backgroundColor: #colorLiteral(red: 0.9838578105, green: 0.9588007331, blue: 0.7274674177, alpha: 1), cellType: .single, apps: [])
             ]
             
             print("Finished fetching")
@@ -89,6 +90,8 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         let cellId = items[indexPath.item].cellType.rawValue
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! BaseTodayCell
         cell.todayItem = items[indexPath.item]
+        
+        (cell as? TodayMultipleAppCell)?.multipleAppsController.collectionView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleMultipleAppsTap)))
         
         return cell
     }
@@ -109,9 +112,10 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if items[indexPath.item].cellType == .multiple {
             let appFullscreenController = TodayMultipleAppsController(mode: .fullscreen)
-            appFullscreenController.results = items[indexPath.item].apps
-            appFullscreenController.modalPresentationStyle = .fullScreen
-            navigationController?.present(appFullscreenController, animated: true)
+            let fullscreenNavigationController = BackEnabledNavigationController(rootViewController: appFullscreenController)
+            appFullscreenController.apps = items[indexPath.item].apps
+            fullscreenNavigationController.modalPresentationStyle = .fullScreen
+            navigationController?.present(fullscreenNavigationController, animated: true)
         } else {
             let appFullscreenController = AppFullscreenController()
             appFullscreenController.todayItem = items[indexPath.row]
@@ -185,5 +189,24 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
             self.appFullscreenController.removeFromParent()
             self.collectionView.isUserInteractionEnabled = true
         })
+    }
+    
+    @objc fileprivate func handleMultipleAppsTap(gesture: UIGestureRecognizer) {
+        let collectionView = gesture.view
+        var superview = collectionView?.superview
+        
+        while superview != nil {
+            if let cell = superview as? TodayMultipleAppCell {
+                guard let indexPath = self.collectionView.indexPath(for: cell) else { return }
+                let appFullscreenController = TodayMultipleAppsController(mode: .fullscreen)
+                let fullscreenNavigationController = BackEnabledNavigationController(rootViewController: appFullscreenController)
+                appFullscreenController.apps = self.items[indexPath.item].apps
+                fullscreenNavigationController.modalPresentationStyle = .fullScreen
+                navigationController?.present(fullscreenNavigationController, animated: true)
+                return
+            }
+            
+            superview = superview?.superview
+        }
     }
 }
