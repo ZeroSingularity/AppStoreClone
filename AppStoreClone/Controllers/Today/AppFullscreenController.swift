@@ -39,12 +39,11 @@ class AppFullscreenController: UITableViewController {
             headeCell.closeButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
             headeCell.todayCell.todayItem = todayItem
             headeCell.todayCell.layer.cornerRadius = 0
-            
+            headeCell.clipsToBounds = true
             return headeCell
         }
         
         let cell = AppFullscreenDescriptionCell()
-        
         return cell
     }
     
