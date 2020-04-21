@@ -40,6 +40,7 @@ class AppFullscreenController: UITableViewController {
             headeCell.todayCell.todayItem = todayItem
             headeCell.todayCell.layer.cornerRadius = 0
             headeCell.clipsToBounds = true
+            headeCell.todayCell.backgroundView = nil
             return headeCell
         }
         
@@ -55,13 +56,10 @@ class AppFullscreenController: UITableViewController {
         return super.tableView(tableView, heightForRowAt: indexPath)
     }
     
-//    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let cell = TodayCell()
-//
-//        return cell
-//    }
-//
-//    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return 450
-//    }
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < 0 {
+            scrollView.isScrollEnabled = false
+            scrollView.isScrollEnabled = true // fixes scrollView if UIPanGestureRecognizer is dragged and not released
+        }
+    }
 }

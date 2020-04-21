@@ -11,6 +11,7 @@ import UIKit
 class TodayController: BaseListController, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     var startingFrame: CGRect?
     var appFullscreenController: AppFullscreenController!
+    var appFullscreenBeginOffset: CGFloat = 0
     var anchoredConstraints: AnchoredConstraints?
     var items = [TodayItem]()
     static let cellSize: CGFloat = 500
@@ -137,14 +138,30 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout, U
     }
     
     @objc fileprivate func handleDrag(_ gesture: UIPanGestureRecognizer) {
+        let translationY = gesture.translation(in: appFullscreenController.view).y
+        
+        if appFullscreenController.tableView.contentOffset.y > 0 {
+            return
+        }
+        
+        if gesture.state == .began {
+            appFullscreenBeginOffset = appFullscreenController.tableView.contentOffset.y
+        }
+        
         if gesture.state == .changed {
-            let translationY = gesture.translation(in: appFullscreenController.view).y
-            print(translationY)
-            let scale = 1 - translationY / 1000
-            let transform: CGAffineTransform = .init(scaleX: scale, y: scale)
-            self.appFullscreenController.view.transform = transform
+            if translationY > 0 {
+                let trueOffset = translationY - appFullscreenBeginOffset
+                var scale = 1 - translationY / 1000
+                print(trueOffset, scale)
+                scale = min(1, scale) // prevents the scale growing from the value of 1
+                scale = max(0.5, scale) // prevents the scale growing smaller than .5
+                let transform: CGAffineTransform = .init(scaleX: scale, y: scale)
+                self.appFullscreenController.view.transform = transform
+            }
         } else if gesture.state == .ended {
-            handleAppFullscreenDismissal()
+            if translationY > 0 {
+                handleAppFullscreenDismissal()
+            }
         }
     }
     
@@ -219,6 +236,7 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout, U
             }
             
             guard let cell = self.appFullscreenController.tableView.cellForRow(at: [0, 0]) as? AppFullscreenHeaderCell else { return }
+            cell.closeButton.alpha = 0
             cell.todayCell.topConstraint.constant = 24
             cell.layoutIfNeeded()
         }, completion: { _ in
