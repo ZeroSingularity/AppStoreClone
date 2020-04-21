@@ -8,12 +8,13 @@
 
 import UIKit
 
-class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
+class TodayController: BaseListController, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     var startingFrame: CGRect?
     var appFullscreenController: AppFullscreenController!
     var anchoredConstraints: AnchoredConstraints?
     var items = [TodayItem]()
     static let cellSize: CGFloat = 500
+    let blurVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
     let activityIndicatorView: UIActivityIndicatorView = {
         let aiv = UIActivityIndicatorView(style: .large)
         aiv.color = .darkGray
@@ -26,7 +27,10 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.addSubview(blurVisualEffectView)
         view.addSubview(activityIndicatorView)
+        blurVisualEffectView.fillSuperview()
+        blurVisualEffectView.alpha = 0
         activityIndicatorView.centerInSuperview()
         navigationController?.isNavigationBarHidden = true
         
@@ -118,10 +122,30 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         let appFullscreenController = AppFullscreenController()
         appFullscreenController.todayItem = items[indexPath.row]
         appFullscreenController.dismissHandler = {
-            self.handleRemoveFullscreenView()
+            self.handleAppFullscreenDismissal()
         }
         appFullscreenController.view.layer.cornerRadius = 16
         self.appFullscreenController = appFullscreenController
+        
+        let gesture = UIPanGestureRecognizer(target: self, action: #selector(handleDrag))
+        gesture.delegate = self
+        appFullscreenController.view.addGestureRecognizer(gesture)
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    @objc fileprivate func handleDrag(_ gesture: UIPanGestureRecognizer) {
+        if gesture.state == .changed {
+            let translationY = gesture.translation(in: appFullscreenController.view).y
+            print(translationY)
+            let scale = 1 - translationY / 1000
+            let transform: CGAffineTransform = .init(scaleX: scale, y: scale)
+            self.appFullscreenController.view.transform = transform
+        } else if gesture.state == .ended {
+            handleAppFullscreenDismissal()
+        }
     }
     
     fileprivate func setupStartingCellFrame(_ indexPath: IndexPath) {
@@ -147,6 +171,7 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     
     fileprivate func beginAnimationAppFullscreen() {
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
+            self.blurVisualEffectView.alpha = 1
             self.anchoredConstraints?.top?.constant = 0
             self.anchoredConstraints?.leading?.constant = 0
             self.anchoredConstraints?.width?.constant = self.view.frame.width
@@ -175,17 +200,18 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         }
     }
     
-    @objc func handleRemoveFullscreenView() {
+    @objc func handleAppFullscreenDismissal() {
         // access starting frame
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
-            
+            self.blurVisualEffectView.alpha = 0
+            self.appFullscreenController.view.transform = .identity
             self.appFullscreenController.tableView.scrollToRow(at: [0, 0], at: .top, animated: true)
             
             guard let startingFrame = self.startingFrame else { return }
             self.anchoredConstraints?.top?.constant = startingFrame.origin.y
             self.anchoredConstraints?.leading?.constant = startingFrame.origin.x
             self.anchoredConstraints?.width?.constant = startingFrame.width
-            self.anchoredConstraints?.height?.constant = startingFrame.height            
+            self.anchoredConstraints?.height?.constant = startingFrame.height
             self.view.layoutIfNeeded()
             
             if let tabBarFrame = self.tabBarController?.tabBar.frame {
