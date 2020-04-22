@@ -12,6 +12,7 @@ class AppFullscreenController: UIViewController, UITableViewDataSource, UITableV
     var dismissHandler: (() -> ())?
     var todayItem: TodayItem?
     let tableView = UITableView(frame: .zero, style: .plain)
+    let floatingContainerView = UIView()
     let closeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(#imageLiteral(resourceName: "close_button"), for: .normal)
@@ -45,13 +46,10 @@ class AppFullscreenController: UIViewController, UITableViewDataSource, UITableV
     }
     
     fileprivate func setupFloatingControls() {
-        let floatingContainerView = UIView()
         floatingContainerView.clipsToBounds = true
         floatingContainerView.layer.cornerRadius = 16
         view.addSubview(floatingContainerView)
-        
-        let bottomPadding = UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
-        floatingContainerView.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 16, bottom: bottomPadding, right: 16), size: .init(width: 0, height: 90))
+        floatingContainerView.anchor(top: nil, leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, padding: .init(top: 0, left: 16, bottom: -90, right: 16), size: .init(width: 0, height: 90))
         
         let blurVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
         floatingContainerView.addSubview(blurVisualEffectView)
@@ -120,5 +118,12 @@ class AppFullscreenController: UIViewController, UITableViewDataSource, UITableV
             scrollView.isScrollEnabled = false
             scrollView.isScrollEnabled = true // fixes scrollView if UIPanGestureRecognizer is dragged and not released
         }
+        
+        let bottomPadding = UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.windowScene?.statusBarManager?.statusBarFrame.height ?? 0
+        let translationY = -90 - bottomPadding
+        let transform = scrollView.contentOffset.y > 100 ? CGAffineTransform(translationX: 0, y: translationY) : .identity
+        UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
+            self.floatingContainerView.transform = transform
+        }, completion: nil)
     }
 }
