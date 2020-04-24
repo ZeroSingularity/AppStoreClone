@@ -9,6 +9,7 @@
 import SwiftUI
 
 class CompositionalController: UICollectionViewController {
+    fileprivate let headerId = "headerId"
     fileprivate let cellId = "cellId"
     fileprivate let appGroupCellId = "appGroupCellId"
     
@@ -21,8 +22,12 @@ class CompositionalController: UICollectionViewController {
                 item.contentInsets = .init(top: 0, leading: 0, bottom: 16, trailing: 16)
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize.init(widthDimension: .fractionalWidth(0.8), heightDimension: .absolute(300)), subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
+                let kind = UICollectionView.elementKindSectionHeader
                 section.contentInsets.leading = 16
                 section.orthogonalScrollingBehavior = .groupPaging
+                section.boundarySupplementaryItems = [
+                    .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .absolute(50)), elementKind: kind, alignment: .topLeading)
+                ]
                 return section
             }
         }
@@ -33,14 +38,29 @@ class CompositionalController: UICollectionViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    class CompositionalHeader: UICollectionReusableView {
+        let label = UILabel(text: "Editor's Choice Games", font: .boldSystemFont(ofSize: 32))
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            addSubview(label)
+            label.fillSuperview()
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.backgroundColor = .systemBackground
         navigationItem.title = "Apps"
         navigationController?.navigationBar.prefersLargeTitles = true
         
+        collectionView.register(CompositionalHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
         collectionView.register(AppsHeaderCell.self, forCellWithReuseIdentifier: cellId)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: appGroupCellId)
+        collectionView.register(AppRowCell.self, forCellWithReuseIdentifier: appGroupCellId)
     }
     
     static func topSection() -> NSCollectionLayoutSection {
@@ -55,11 +75,16 @@ class CompositionalController: UICollectionViewController {
     }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 4
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 8
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
+        return header
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -69,7 +94,6 @@ class CompositionalController: UICollectionViewController {
             return cell
         default:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: appGroupCellId, for: indexPath)
-            cell.backgroundColor = .darkGray
             return cell
         }
     }
